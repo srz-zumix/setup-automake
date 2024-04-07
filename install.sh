@@ -19,7 +19,7 @@ mkdir -p "${AUTOMAKE_INSTALLDIR}"
 download() {
   curl --output "${AUTOMAKE_TEMPDIR}/automake.tar.gz" -sSL "http://ftpmirror.gnu.org/automake/automake-${VERSION}.tar.gz"
   curl --output "${AUTOMAKE_TEMPDIR}/automake.tar.gz.sig" -sSL "http://ftpmirror.gnu.org/automake/automake-${VERSION}.tar.gz.sig"
-  gpg --keyserver keys.gnupg.net --recv-keys "7FD9FCCB000BEEEE"
+  gpg --keyserver hkp://keys.gnupg.net --recv-keys "7FD9FCCB000BEEEE"
   gpg --verify "${AUTOMAKE_TEMPDIR}/automake.tar.gz.sig" "${AUTOMAKE_TEMPDIR}/automake.tar.gz"
   tar -zx -f "${AUTOMAKE_TEMPDIR}/automake.tar.gz" -C "${AUTOMAKE_TEMPDIR}/"
 
