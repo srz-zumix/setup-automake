@@ -1,0 +1,38 @@
+name: 'Setup automake'
+description: 'This action sets up automake'
+inputs:
+  version:
+    description: 'automake version. [latest,vX.Y.Z]'
+    default: 'latest'
+outputs:
+  version:
+    description: 'installed automake version'
+    value: ${{ steps.install.outputs.version }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Resolve version
+      shell: bash
+      id: resolve
+      env:
+        INPUTS_VERSION: ${{ inputs.version }}
+      run: |
+        "${GITHUB_ACTION_PATH}/resolve.sh"
+    - name: Install automake
+      shell: bash
+      id: install
+      env:
+        INPUTS_VERSION: ${{ steps.resolve.outputs.version }}
+      run: |
+        "${GITHUB_ACTION_PATH}/install.sh"
+    - name: Automake Help
+      shell: bash
+      run: |
+        echo "::group::📖 automake -h"
+        automake -h 2>&1 || true
+        echo "::endgroup::"
+
+branding:
+  icon: 'book'
+  color: 'blue'

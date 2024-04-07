@@ -1,0 +1,21 @@
+name: SelfTest
+on:
+  pull_request:
+
+jobs:
+  self-test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: 
+          - ubuntu-latest
+          - macos-latest
+    steps:
+    - name: clone
+      uses: actions/checkout@v4
+    - uses: ./
+      id: setup
+    # - run: |
+    #     test -n "${{ steps.setup.outputs.infer_version }}"
+    #     infer --version | grep "${{ steps.setup.outputs.infer_version }}"
