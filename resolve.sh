@@ -15,11 +15,10 @@ resolve_version() {
   fi
 }
 
-WILDCARD_CHAR=\*
-if [ "${VERSION}" == 'latest' ] || (echo "${VERSION}" | grep '*'); then
+if [ "${VERSION}" == 'latest' ] || (echo "${VERSION}" | grep '[*]'); then
   echo '::group::📖 Resolve automake version ...'
   resolve_version
   echo '::endgroup::'
 fi
 
-echo "version=${VERSION}" >> "${GITHUB_OUTPUT:-/dev/null}"
+echo "version=${VERSION}" | tee -a "${GITHUB_OUTPUT:-/dev/null}"

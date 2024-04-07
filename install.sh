@@ -5,8 +5,8 @@ source "${GITHUB_ACTION_PATH:-.}/resolve.sh"
 
 AUTOMAKE_TEMPDIR="${INPUTS_AUTOMAKE_TEMPDIR:-}"
 if [ -z "${AUTOMAKE_TEMPDIR}" ]; then
-  if [ -n "${RUNNER_TEMP}" ]; then
-    AUTOMAKE_TEMPDIR="${RUNNER_TEMP}"
+  if [ -n "${RUNNER_TEMP:-}" ]; then
+    AUTOMAKE_TEMPDIR="${RUNNER_TEMP:-}"
   else
     AUTOMAKE_TEMPDIR="$(mktemp -d)"
   fi
@@ -19,7 +19,8 @@ mkdir -p "${AUTOMAKE_INSTALLDIR}"
 download() {
   curl --output "${AUTOMAKE_TEMPDIR}/automake.tar.gz" -sSL "http://ftpmirror.gnu.org/automake/automake-${VERSION}.tar.gz"
   curl --output "${AUTOMAKE_TEMPDIR}/automake.tar.gz.sig" -sSL "http://ftpmirror.gnu.org/automake/automake-${VERSION}.tar.gz.sig"
-  sudo gpg --keyserver hkp://keys.gnupg.net --recv-keys "7FD9FCCB000BEEEE"
+  curl --output "${AUTOMAKE_TEMPDIR}/gnu-keyring.gpg" -sSL "https://ftp.gnu.org/gnu/gnu-keyring.gpg"
+  gpg --import "${AUTOMAKE_TEMPDIR}/gnu-keyring.gpg"
   gpg --verify "${AUTOMAKE_TEMPDIR}/automake.tar.gz.sig" "${AUTOMAKE_TEMPDIR}/automake.tar.gz"
   tar -zx -f "${AUTOMAKE_TEMPDIR}/automake.tar.gz" -C "${AUTOMAKE_TEMPDIR}/"
 
