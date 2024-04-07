@@ -29,8 +29,8 @@ runs:
     - name: Automake Help
       shell: bash
       run: |
-        echo "::group::📖 automake -h"
-        automake -h 2>&1 || true
+        echo "::group::📖 automake --help"
+        automake --help 2>&1 || true
         echo "::endgroup::"
 
 branding:
