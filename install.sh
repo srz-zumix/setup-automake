@@ -1,18 +1,7 @@
 #!/bin/bash
-set -euox pipefail
+set -euo pipefail
 
 source "${GITHUB_ACTION_PATH:-.}/resolve.sh"
-
-AUTOMAKE_TEMPDIR="${INPUTS_AUTOMAKE_TEMPDIR:-}"
-if [ -z "${AUTOMAKE_TEMPDIR}" ]; then
-  if [ -n "${RUNNER_TEMP:-}" ]; then
-    AUTOMAKE_TEMPDIR="${RUNNER_TEMP:-}"
-  else
-    AUTOMAKE_TEMPDIR="$(mktemp -d)"
-  fi
-fi
-
-AUTOMAKE_INSTALLDIR="${RUNNER_TOOL_CACHE:-${AUTOMAKE_TEMPDIR}}/automake/${VERSION}"
 
 mkdir -p "${AUTOMAKE_INSTALLDIR}"
 
@@ -39,9 +28,10 @@ install() {
     ./configure --prefix="${AUTOMAKE_INSTALLDIR}"
     make -j"$(nproc)"
     make install
-    echo "${AUTOMAKE_INSTALLDIR}/bin" >> "${GITHUB_PATH:-/dev/null}"
     echo '::endgroup::'
   fi
 }
 
 install
+
+echo "${AUTOMAKE_INSTALLDIR}/bin" >> "${GITHUB_PATH:-/dev/null}"

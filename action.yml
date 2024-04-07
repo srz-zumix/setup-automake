@@ -19,6 +19,11 @@ runs:
         INPUTS_VERSION: ${{ inputs.version }}
       run: |
         "${GITHUB_ACTION_PATH}/resolve.sh"
+    - uses: actions/cache/restore@v4
+      with:
+        path: |
+          ${{ steps.resolve.outputs.path }}
+        key: ${{ runner.os }}-automake-${{ steps.resolve.outputs.version }}
     - name: Install automake
       shell: bash
       id: install
@@ -26,6 +31,11 @@ runs:
         INPUTS_VERSION: ${{ steps.resolve.outputs.version }}
       run: |
         "${GITHUB_ACTION_PATH}/install.sh"
+    - uses: actions/cache/save@v4
+      with:
+        path: |
+          ${{ steps.resolve.outputs.path }}
+        key: ${{ runner.os }}-automake-${{ steps.resolve.outputs.version }}
     - name: Automake Help
       shell: bash
       run: |
