@@ -24,6 +24,21 @@ runs:
         path: |
           ${{ steps.resolve.outputs.path }}
         key: ${{ runner.os }}-automake-${{ steps.resolve.outputs.version }}
+    - name: Check if automake is installed
+      id: check
+      shell: bash
+      env:
+        INPUTS_VERSION: ${{ steps.resolve.outputs.version }}
+      run: |
+        "${GITHUB_ACTION_PATH}/check.sh"
+    - name: Download automake
+      shell: bash
+      id: download
+      env:
+        INPUTS_VERSION: ${{ steps.resolve.outputs.version }}
+      run: |
+        "${GITHUB_ACTION_PATH}/download.sh"
+      if: steps.check.outputs.installed == 'false'
     - name: Install automake
       shell: bash
       id: install
@@ -31,11 +46,13 @@ runs:
         INPUTS_VERSION: ${{ steps.resolve.outputs.version }}
       run: |
         "${GITHUB_ACTION_PATH}/install.sh"
+      if: steps.check.outputs.installed == 'false'
     - uses: actions/cache/save@v4
       with:
         path: |
           ${{ steps.resolve.outputs.path }}
         key: ${{ runner.os }}-automake-${{ steps.resolve.outputs.version }}
+      if: steps.check.outputs.installed == 'false'
     - name: Automake Help
       shell: bash
       run: |
