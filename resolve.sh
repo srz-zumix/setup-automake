@@ -23,15 +23,15 @@ fi
 
 echo "version=${VERSION}" | tee -a "${GITHUB_OUTPUT:-/dev/null}"
 
-AUTOMAKE_TEMPDIR="${INPUTS_AUTOMAKE_TEMPDIR:-}"
-if [ -z "${AUTOMAKE_TEMPDIR}" ]; then
+TOOL_TEMPDIR="${INPUTS_TOOL_TEMPDIR:-}"
+if [ -z "${TOOL_TEMPDIR}" ]; then
   if [ -n "${RUNNER_TEMP:-}" ]; then
-    AUTOMAKE_TEMPDIR="${RUNNER_TEMP:-}"
+    TOOL_TEMPDIR="${RUNNER_TEMP:-}"
   else
-    AUTOMAKE_TEMPDIR="$(mktemp -d)"
+    TOOL_TEMPDIR="$(mktemp -d)"
   fi
 fi
 
-AUTOMAKE_INSTALLDIR="${RUNNER_TOOL_CACHE:-${AUTOMAKE_TEMPDIR}}/automake/${VERSION}"
+TOOL_INSTALLDIR="${RUNNER_TOOL_CACHE:-${TOOL_TEMPDIR}}/automake/${VERSION}"
 
-echo "path=${AUTOMAKE_INSTALLDIR}" | tee -a "${GITHUB_OUTPUT:-/dev/null}"
+echo "path=${TOOL_INSTALLDIR}" | tee -a "${GITHUB_OUTPUT:-/dev/null}"

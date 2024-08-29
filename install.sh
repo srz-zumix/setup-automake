@@ -3,6 +3,9 @@ set -euo pipefail
 
 source "${GITHUB_ACTION_PATH:-.}/resolve.sh"
 
+AUTOMAKE_INSTALLDIR="${TOOL_INSTALLDIR}/automake"
+AUTOMAKE_TEMPDIR="${TOOL_TEMPDIR}/automake"
+mkdir -p "${AUTOMAKE_TEMPDIR}"
 mkdir -p "${AUTOMAKE_INSTALLDIR}"
 
 download() {
@@ -23,6 +26,10 @@ download() {
 install() {
   if [ ! -f "${AUTOMAKE_INSTALLDIR}/bin/automake" ]; then
     download
+    if ! command -v autoconf >/dev/null 2>&1; then
+      REQUIRED_AUTOCONF_VERSION=$(grep -o 'required_autoconf_version.*[0-9.]*[0-9]*' "${AUTOMAKE_TEMPDIR}/automake-${VERSION}/configure.ac" | head -1 | grep -o '[0-9.]*[0-9]*')
+      "${GITHUB_ACTION_PATH:-.}/install-gnu-tool.sh" autoconf "${REQUIRED_AUTOCONF_VERSION}"
+    fi
     echo '::group::📖 Installing automake ...'
     cd "${AUTOMAKE_TEMPDIR}/automake-${VERSION}"
     ./configure --prefix="${AUTOMAKE_INSTALLDIR}"
