@@ -13,6 +13,7 @@ resolve_version() {
   else
     VERSION=$(versions | grep "^${VERSION}\$" | tail -1)
   fi
+  echo "version=${VERSION}"
 }
 
 if [ "${VERSION}" == 'latest' ] || (echo "${VERSION}" | grep '[*]'); then
@@ -21,7 +22,7 @@ if [ "${VERSION}" == 'latest' ] || (echo "${VERSION}" | grep '[*]'); then
   echo '::endgroup::'
 fi
 
-echo "version=${VERSION}" | tee -a "${GITHUB_OUTPUT:-/dev/null}"
+echo "version=${VERSION}" >> "${GITHUB_OUTPUT:-/dev/null}"
 
 AUTOMAKE_TEMPDIR="${INPUTS_AUTOMAKE_TEMPDIR:-}"
 if [ -z "${AUTOMAKE_TEMPDIR}" ]; then
@@ -34,4 +35,4 @@ fi
 
 AUTOMAKE_INSTALLDIR="${RUNNER_TOOL_CACHE:-${AUTOMAKE_TEMPDIR}}/automake/${VERSION}"
 
-echo "path=${AUTOMAKE_INSTALLDIR}" | tee -a "${GITHUB_OUTPUT:-/dev/null}"
+echo "path=${AUTOMAKE_INSTALLDIR}" >> "${GITHUB_OUTPUT:-/dev/null}"
