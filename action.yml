@@ -7,7 +7,7 @@ inputs:
 outputs:
   version:
     description: 'installed automake version'
-    value: ${{ steps.install.outputs.version }}
+    value: ${{ steps.execute.outputs.version }}
 
 runs:
   using: 'composite'
@@ -58,12 +58,16 @@ runs:
         key: ${{ runner.os }}-automake-${{ steps.resolve.outputs.version }}
       if: steps.check.outputs.installed == 'false'
     - name: Automake Help
+      id: execute
       shell: bash
       run: |
         # Automake Help
         echo "::group::📖 automake --help"
         automake --help 2>&1 || true
         echo "::endgroup::"
+        VERSION=$(automake --version | grep 'automake' | awk '{print $NF}')
+        echo "automake version: ${VERSION}"
+        echo "version=${VERSION}" >> "${GITHUB_OUTPUT}"
 
 branding:
   icon: 'book'
