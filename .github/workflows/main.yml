@@ -15,6 +15,8 @@ jobs:
     - name: clone
       uses: actions/checkout@v4
     - uses: srz-zumix/setup-autoconf@v0
+      with:
+        version: '2.65'
       if: runner.os == 'macos'
     - uses: ./
       id: setup
