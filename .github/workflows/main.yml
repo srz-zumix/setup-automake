@@ -14,11 +14,12 @@ jobs:
     steps:
     - name: clone
       uses: actions/checkout@v4
-    # - uses: srz-zumix/setup-autoconf@v0
-    #   with:
-    #     version: '2.72'
+    - uses: srz-zumix/setup-autoconf@v0
+      with:
+        version: '2.72'
+      if: runner.os == 'macos'
     - run: |
-        brew install autoconf
+        # brew install autoconf
         autoconf --version
       if: runner.os == 'macos'
     - uses: ./
