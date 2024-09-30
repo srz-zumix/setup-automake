@@ -7,7 +7,7 @@ inputs:
 outputs:
   version:
     description: 'installed automake version'
-    value: ${{ steps.install.outputs.version }}
+    value: ${{ steps.execute.outputs.version }}
 
 runs:
   using: 'composite'
@@ -18,30 +18,56 @@ runs:
       env:
         INPUTS_VERSION: ${{ inputs.version }}
       run: |
+        # Resolve version
         "${GITHUB_ACTION_PATH}/resolve.sh"
     - uses: actions/cache/restore@v4
       with:
         path: |
           ${{ steps.resolve.outputs.path }}
         key: ${{ runner.os }}-automake-${{ steps.resolve.outputs.version }}
+    - name: Check if automake is installed
+      id: check
+      shell: bash
+      env:
+        INPUTS_VERSION: ${{ steps.resolve.outputs.version }}
+      run: |
+        # Check if automake is installed
+        "${GITHUB_ACTION_PATH}/check.sh"
+    - name: Download automake
+      shell: bash
+      id: download
+      env:
+        INPUTS_VERSION: ${{ steps.resolve.outputs.version }}
+      run: |
+        # Download
+        "${GITHUB_ACTION_PATH}/download.sh"
+      if: steps.check.outputs.installed == 'false'
     - name: Install automake
       shell: bash
       id: install
       env:
         INPUTS_VERSION: ${{ steps.resolve.outputs.version }}
       run: |
+        # Install
         "${GITHUB_ACTION_PATH}/install.sh"
+      if: steps.check.outputs.installed == 'false'
     - uses: actions/cache/save@v4
       with:
         path: |
           ${{ steps.resolve.outputs.path }}
         key: ${{ runner.os }}-automake-${{ steps.resolve.outputs.version }}
+      if: steps.check.outputs.installed == 'false'
     - name: Automake Help
+      id: execute
       shell: bash
       run: |
+        # Automake Help
         echo "::group::📖 automake --help"
         automake --help 2>&1 || true
         echo "::endgroup::"
+        VERSION=$(automake --version | grep 'automake' | awk '{print $NF}')
+        echo "automake version: ${VERSION}"
+        echo "version=${VERSION}" >> "${GITHUB_OUTPUT}"
 
 branding:
   icon: 'book'
