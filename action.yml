@@ -51,14 +51,6 @@ runs:
         # Install
         "${GITHUB_ACTION_PATH}/install.sh"
       if: steps.check.outputs.installed == 'false'
-    - name: Report log
-      shell: bash
-      run: |
-        # Report log
-        echo "::group::📋 Report"
-        cat config.log || true
-        echo "::endgroup::"
-      if: failure() && steps.install.outcome == 'failure'
     - uses: actions/cache/save@v4
       with:
         path: |
