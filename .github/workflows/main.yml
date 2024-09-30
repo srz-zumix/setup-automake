@@ -18,10 +18,6 @@ jobs:
       with:
         version: '2.72'
       if: runner.os == 'macos'
-    - run: |
-        # brew install autoconf
-        autoconf --version
-      if: runner.os == 'macos'
     - uses: ./
       id: setup
     - run: |
