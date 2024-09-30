@@ -58,7 +58,7 @@ runs:
         echo "::group::📋 Report"
         cat config.log || true
         echo "::endgroup::"
-      if: steps.install.outcome == 'failure'
+      if: failure() && steps.install.outcome == 'failure'
     - uses: actions/cache/save@v4
       with:
         path: |
