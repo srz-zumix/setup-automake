@@ -20,7 +20,7 @@ runs:
       run: |
         # Resolve version
         "${GITHUB_ACTION_PATH}/resolve.sh"
-    - uses: actions/cache/restore@v4
+    - uses: actions/cache/restore@v5
       with:
         path: |
           ${{ steps.resolve.outputs.path }}
@@ -51,7 +51,7 @@ runs:
         # Install
         "${GITHUB_ACTION_PATH}/install.sh"
       if: steps.check.outputs.installed == 'false'
-    - uses: actions/cache/save@v4
+    - uses: actions/cache/save@v5
       with:
         path: |
           ${{ steps.resolve.outputs.path }}
